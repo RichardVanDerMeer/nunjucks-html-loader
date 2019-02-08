@@ -1,6 +1,7 @@
 Nunjucks (Webpack) HTML Loader
 ==============================
 The original 'nunjucks-loader' takes nunjucks templates and turns them into javascript. I wanted to take nunjucks templates and turn them into pre-compiled static html files.
+This fork also adds an option to make adjustments to the environment.
 
 [![NPM version][npm-image]][npm-url]
 [![Github license][github-license-image]][github-url]
@@ -20,15 +21,24 @@ When you mix it with the file-loader you can take it one step further!
 Add your personal variation to the below loader configuration to your webpack config and you should be good to go.
 
 	{
-        test: /\.nunj$/,
-        loader: 'file?context=' + precompiledContext + '&name=[path][name].html!nunjucks-html?' +
-        	JSON.stringify({
-        		'searchPaths': [
-					'/path/to/sources',
-					'/path/to/more/sources'
-				]
-        	})
-    }
+		test: /njk|nunjucks/,
+		use: [
+			{
+				loader: 'nunjucks-html-loader',
+				query: {
+					environment: function(env) {
+						env.addGlobal('base', '/path/to/base')
+						return env
+					},
+					context: 'src',
+					name: '[path][name].html'
+				}
+
+			},
+
+		]
+
+	}
 
 
 [npm-url]: https://www.npmjs.com/package/nunjucks-html-loader
